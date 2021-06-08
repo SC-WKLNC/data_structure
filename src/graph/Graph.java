@@ -1,6 +1,7 @@
 package graph;
 
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class Graph {
@@ -32,7 +33,7 @@ public class Graph {
         if(!n1.adjacent.contains(n2)) {
             n1.adjacent.add(n2);
         }
-        if(n2.adjacent.contains(n1)) {
+        if(!n2.adjacent.contains(n1)) {
             n2.adjacent.add(n1);
         }
     }
@@ -78,15 +79,27 @@ public class Graph {
         dfsR(0);
     }
 
-//    void bfs() {
-//        bfs(0); //0번 부터 시작
-//    }
-//
-//    void bfs(int index) {
-//        Node root = nodes[index];
-//        Queue<Node> queue = new Queue<>();
-//
-//    }
+    void bfs() {
+        bfs(0); //0번 부터 시작
+    }
+
+    void bfs(int index) {
+        Node root = nodes[index];
+        Queue<Node> queue = new LinkedList<>(); // liked 로 queue 사용
+        queue.add(root);                        // 데이터를 큐에 추가
+        root.marked = true;                     // 마킹
+        while(!queue.isEmpty()) {               // 다 비어있을 때 까지 반복
+            Node r = queue.poll();              // 큐에서 노드를 하나 꺼내고
+            for(Node n : r.adjacent) {          // 노드의 인접노드들을 탐색
+                if(!n.marked) {                 // 마킹이 되어있지 않은 노드만 마킹후 큐에 추가
+                    n.marked = true;
+                    queue.add(n);
+                }
+            }
+            visit(r);
+        }
+
+    }
 
     void visit(Node n) {
         System.out.print(n.data + " ");
@@ -130,7 +143,8 @@ public class Graph {
             g.addEdge(5, 6);
             g.addEdge(5, 7);
             g.addEdge(6, 8);
-            g.dfsR(3);
+//            g.dfs();
+            g.bfs();
         }
     }
 }
